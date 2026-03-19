@@ -10,18 +10,17 @@ import {
     ResponsiveContainer,
     Legend
 } from 'recharts';
+import { DailyPerformance } from '../types';
 
-interface DataPoint {
-    date: string;
-    investedValue: number;
-    portfolioValue: number;
-    isPurchase: boolean;
-    purchaseDetails?: { symbol: string; quantity: number; buyPrice: number }[];
-}
-
+/**
+ * CustomTooltip - Recharts Custom Overlay
+ * 
+ * Safely natively intercepts Recharts hovering payloads automatically formatting highly 
+ * structured nested purchase breakdowns natively.
+ */
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
-        const data = payload[0].payload;
+        const data: DailyPerformance = payload[0].payload;
         const dateObj = new Date(label);
         const formattedDate = `${dateObj.toLocaleString('default', { month: 'short' })} ${dateObj.getDate()}, ${dateObj.getFullYear()}`;
 
@@ -38,9 +37,9 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                 {data.isPurchase && data.purchaseDetails && (
                     <div style={{ marginTop: '12px', borderTop: '1px solid #e5e7eb', paddingTop: '8px' }}>
                         <p style={{ margin: '0 0 4px 0', fontSize: '0.9rem', fontWeight: 600, color: '#111827' }}>Purchased Today:</p>
-                        {data.purchaseDetails.map((p: any, i: number) => (
+                        {data.purchaseDetails.map((p, i) => (
                             <p key={i} style={{ margin: '2px 0', fontSize: '0.85rem', color: '#374151' }}>
-                                • {p.quantity}x {p.symbol} @ ₹{p.buyPrice.toLocaleString()}
+                                • {p.quantity}x {p.symbol} @ ₹{p.price.toLocaleString()}
                             </p>
                         ))}
                     </div>
@@ -51,6 +50,12 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return null;
 };
 
+/**
+ * CustomDot - Recharts Canvas Marker
+ * 
+ * Conditionally accurately draws strong canvas marker elements completely cleanly
+ * specifically precisely when active investment (isPurchase) signals naturally align.
+ */
 const CustomDot = (props: any) => {
     const { cx, cy, payload } = props;
     if (payload.isPurchase) {
@@ -65,7 +70,13 @@ const CustomDot = (props: any) => {
     return null;
 };
 
-export default function StockChart({ data }: { data: DataPoint[] }) {
+/**
+ * StockChart - Responsive Client Component
+ * 
+ * Projects strictly inherently calculated dynamic nested Data structures safely explicitly via
+ * mathematically refined X/Y grid definitions naturally gracefully rendering gracefully.
+ */
+export default function StockChart({ data }: { data: DailyPerformance[] }) {
     return (
         <div style={{ width: '100%', height: 500 }}>
             {data.length === 0 ? (
@@ -97,7 +108,7 @@ export default function StockChart({ data }: { data: DataPoint[] }) {
                             wrapperStyle={{ paddingTop: '20px' }}
                             iconType="plainline"
                         />
-                        {/* Invested Value Line */}
+                        {/* Invested Value Component Tracking */}
                         <Line
                             name="Total Invested"
                             type="stepAfter"
@@ -107,7 +118,7 @@ export default function StockChart({ data }: { data: DataPoint[] }) {
                             dot={<CustomDot />}
                             activeDot={{ r: 6, strokeWidth: 0, fill: '#4b5563' }}
                         />
-                        {/* Portfolio Value Line */}
+                        {/* Portfolio Fluctuation Component Tracking */}
                         <Line
                             name="Portfolio Value"
                             type="monotone"
