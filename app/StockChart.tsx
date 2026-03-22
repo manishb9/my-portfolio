@@ -82,7 +82,7 @@ export default function StockChart({ data }: { data: DailyPerformance[] }) {
             {data.length === 0 ? (
                 <p>No data available</p>
             ) : (
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                     <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
                         <XAxis

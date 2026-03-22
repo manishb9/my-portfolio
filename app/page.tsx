@@ -31,7 +31,7 @@ export default async function Home() {
   }));
 
   // 4. Compute daily charting metrics utilizing extracted secure finance computations
-  const chartData = await generatePortfolioTimeline(investments);
+  const { chartData, lastMarketDate } = await generatePortfolioTimeline(investments);
 
   // 5. Render Server-Side User Interface seamlessly
   return (
@@ -46,7 +46,12 @@ export default async function Home() {
       <TransactionForm />
 
       {/* Visualization Canvas: Renders strictly computed data seamlessly mathematically */}
-      <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem', color: '#111827' }}>Performance Chart</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1rem' }}>
+        <h2 style={{ fontSize: '1.2rem', margin: 0, color: '#111827' }}>Performance Chart</h2>
+        {lastMarketDate && (
+          <span style={{ fontSize: '0.9rem', color: '#666' }}>Data till {lastMarketDate}</span>
+        )}
+      </div>
       <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)' }}>
         <StockChart data={chartData} />
       </div>

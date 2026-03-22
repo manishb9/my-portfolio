@@ -11,37 +11,51 @@ const yf = new YahooFinance({ suppressNotices: ['ripHistorical'] });
  * @param investments - Array of raw user transactions inherently sorted natively by chronological date via SQLite.
  * @returns A fully verified DailyPerformance array natively compatible specifically for Recharts visualization properties.
  */
-export async function generatePortfolioTimeline(investments: Transaction[]): Promise<DailyPerformance[]> {
-    if (investments.length === 0) return [];
+export async function generatePortfolioTimeline(investments: Transaction[]): Promise<{ chartData: DailyPerformance[], lastMarketDate: string | null }> {
+    if (investments.length === 0) return { chartData: [], lastMarketDate: null };
 
     // 1. Derive unique Yahoo-compatible symbol formats (e.g. INFY.NS) natively for all invested shares.
     const uniqueTickers = Array.from(new Set(investments.map(inv =>
         `${inv.symbol}.${inv.exchange === 'NSE' ? 'NS' : 'BO'}`
     )));
 
-    const today = new Date().toISOString().split('T')[0];
+    const firstDate = new Date(investments[0].date);
+    firstDate.setDate(firstDate.getDate() - 7); // Fetch 7 days prior to guarantee a prior market close price exists
+    const period1 = firstDate.toISOString().split('T')[0];
+
+    // Make period2 strictly tomorrow to ensure today is always captured, and period1 != period2
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const period2 = tomorrow.toISOString().split('T')[0];
+
     const queryOptions = {
-        period1: investments[0].date,
-        period2: today,
+        period1,
+        period2,
     };
 
     // 2. Concurrently fetch all historical data strictly for these uniquely mapped tickers efficiently without bottlenecks.
     const historicalDataPromises = uniqueTickers.map(ticker =>
-        yf.historical(ticker, queryOptions as any)
+        yf.historical(ticker, queryOptions as any).catch(() => []) // Safely catch missing market days/errors natively
     );
     const historicalResults = await Promise.all(historicalDataPromises);
 
     // 3. Normalize all fetched data natively into a reliable O(1) Dictionary Lookup Map mapped exclusively by YYYY-MM-DD
     const allDates = new Set<string>();
     const priceMap: Record<string, Record<string, number>> = {};
+    let lastMarketDate: string | null = null;
 
     uniqueTickers.forEach((ticker, index) => {
         priceMap[ticker] = {};
         (historicalResults[index] as any[]).forEach(quote => {
             // Normalize dates tightly
-            const d = new Date(quote.date).toISOString().split('T')[0];
+            const rawDate = new Date(quote.date);
+            const d = rawDate.toISOString().split('T')[0];
             allDates.add(d);
             priceMap[ticker][d] = quote.close; // Assumes exact market closing price logic locally
+            
+            if (!lastMarketDate || d > lastMarketDate) {
+                lastMarketDate = d;
+            }
         });
     });
 
@@ -53,7 +67,7 @@ export async function generatePortfolioTimeline(investments: Transaction[]): Pro
     const lastKnownPrices: Record<string, number> = {};
 
     // 5. Aggregate rolling portfolio mathematical logic stepping strictly forwards through time perfectly sequentially.
-    return sortedDates.map(date => {
+    const timeline = sortedDates.map(date => {
         // Forward-fill missing prices gracefully carrying prior prices specifically across dead long-weekends flawlessly.
         uniqueTickers.forEach(ticker => {
             if (priceMap[ticker][date]) {
@@ -113,4 +127,9 @@ export async function generatePortfolioTimeline(investments: Transaction[]): Pro
             purchaseDetails
         };
     });
+
+    // Strip out the extra 7 days we prefetched to keep the UX clean, only show from first investment forwards
+    const chartData = timeline.filter(day => day.date >= investments[0].date);
+
+    return { chartData, lastMarketDate };
 }
