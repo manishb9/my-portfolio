@@ -15,12 +15,14 @@ export async function getDb(): Promise<Database> {
     await global._sqliteDb.exec(`
       CREATE TABLE IF NOT EXISTS transactions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        symbol TEXT NOT NULL,
-        type TEXT NOT NULL,
-        exchange TEXT NOT NULL,
-        date TEXT NOT NULL,
-        quantity INTEGER NOT NULL,
-        price REAL NOT NULL
+        script TEXT,
+        date TEXT,
+        qty INTEGER,
+        price REAL,
+        amount REAL,
+        holding_days INTEGER,
+        tax REAL,
+        remark TEXT
       )
     `);
   }

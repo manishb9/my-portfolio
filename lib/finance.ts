@@ -14,28 +14,28 @@ const yf = new YahooFinance({ suppressNotices: ['ripHistorical'] });
 export async function generatePortfolioTimeline(investments: Transaction[]): Promise<{ chartData: DailyPerformance[], lastMarketDate: string | null }> {
     if (investments.length === 0) return { chartData: [], lastMarketDate: null };
 
-    // 1. Derive unique Yahoo-compatible symbol formats (e.g. INFY.NS) natively for all invested shares.
+    // 1. Derive unique Yahoo-compatible symbol formats natively mapping to NSE consistently.
     const uniqueTickers = Array.from(new Set(investments.map(inv =>
-        `${inv.symbol}.${inv.exchange === 'NSE' ? 'NS' : 'BO'}`
+        `${inv.symbol}.NS`
     )));
 
     const firstDate = new Date(investments[0].date);
     firstDate.setDate(firstDate.getDate() - 7); // Fetch 7 days prior to guarantee a prior market close price exists
-    const period1 = firstDate.toISOString().split('T')[0];
 
     // Make period2 strictly tomorrow to ensure today is always captured, and period1 != period2
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const period2 = tomorrow.toISOString().split('T')[0];
 
     const queryOptions = {
-        period1,
-        period2,
+        period1: firstDate,
+        period2: tomorrow,
     };
 
     // 2. Concurrently fetch all historical data strictly for these uniquely mapped tickers efficiently without bottlenecks.
     const historicalDataPromises = uniqueTickers.map(ticker =>
-        yf.historical(ticker, queryOptions as any).catch(() => []) // Safely catch missing market days/errors natively
+        yf.chart(ticker, queryOptions as any)
+            .then(data => data.quotes || [])
+            .catch(() => []) // Safely catch missing market days/errors natively
     );
     const historicalResults = await Promise.all(historicalDataPromises);
 
@@ -51,7 +51,9 @@ export async function generatePortfolioTimeline(investments: Transaction[]): Pro
             const rawDate = new Date(quote.date);
             const d = rawDate.toISOString().split('T')[0];
             allDates.add(d);
-            priceMap[ticker][d] = quote.close; // Assumes exact market closing price logic locally
+            if (quote.close != null) {
+                priceMap[ticker][d] = quote.close; 
+            }
             
             if (!lastMarketDate || d > lastMarketDate) {
                 lastMarketDate = d;
@@ -83,7 +85,7 @@ export async function generatePortfolioTimeline(investments: Transaction[]): Pro
 
         // Analyze strictly investments that happened inherently either historically prior or on this exactly scanned current day.
         investments.filter(inv => inv.date <= date).forEach(inv => {
-            const ticker = `${inv.symbol}.${inv.exchange === 'NSE' ? 'NS' : 'BO'}`;
+            const ticker = `${inv.symbol}.NS`;
             if (!runningHoldings[ticker]) runningHoldings[ticker] = { quantity: 0, invested: 0 };
 
             if (inv.type === 'Buy') {

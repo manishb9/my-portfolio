@@ -26,15 +26,17 @@ export async function searchSymbol(query: string) {
 
 export async function addTransaction(formData: FormData) {
     const db = await getDb();
+    const qty = parseInt(formData.get('quantity') as string) || 0;
+    const price = parseFloat(formData.get('price') as string) || 0;
+    
     await db.run(
-        `INSERT INTO transactions (symbol, type, exchange, date, quantity, price) VALUES (?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO transactions (script, date, qty, price, amount) VALUES (?, ?, ?, ?, ?)`,
         [
             formData.get('symbol')?.toString().toUpperCase(),
-            formData.get('type'),
-            formData.get('exchange'),
             formData.get('date'),
-            parseInt(formData.get('quantity') as string),
-            parseFloat(formData.get('price') as string)
+            qty,
+            price,
+            qty * price
         ]
     );
     revalidatePath('/');
@@ -42,15 +44,17 @@ export async function addTransaction(formData: FormData) {
 
 export async function updateTransaction(formData: FormData) {
     const db = await getDb();
+    const qty = parseInt(formData.get('quantity') as string) || 0;
+    const price = parseFloat(formData.get('price') as string) || 0;
+    
     await db.run(
-        `UPDATE transactions SET symbol=?, type=?, exchange=?, date=?, quantity=?, price=? WHERE id=?`,
+        `UPDATE transactions SET script=?, date=?, qty=?, price=?, amount=? WHERE id=?`,
         [
             formData.get('symbol')?.toString().toUpperCase(),
-            formData.get('type'),
-            formData.get('exchange'),
             formData.get('date'),
-            parseInt(formData.get('quantity') as string),
-            parseFloat(formData.get('price') as string),
+            qty,
+            price,
+            qty * price,
             parseInt(formData.get('id') as string)
         ]
     );

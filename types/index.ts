@@ -3,12 +3,20 @@
  */
 export interface Transaction {
     id: number;
+    script: string;
+    date: string; // YYYY-MM-DD
+    qty: number;
+    price: number;
+    amount: number;
+    holding_days?: number;
+    tax?: number;
+    remark?: string;
+    
+    // Extrapolated legacy params 
     symbol: string;
-    type: 'Buy' | 'Sell';
-    exchange: 'NSE' | 'BSE';
-    date: string; // YYYY-MM-DD format
+    type: string;
+    exchange: string;
     quantity: number;
-    price: number; // The executed purchase/sell price per share
 }
 
 /**

@@ -4,6 +4,7 @@ import { generatePortfolioTimeline } from '../lib/finance';
 import { Transaction } from '../types';
 import TransactionForm from './TransactionForm';
 import TransactionTable from './TransactionTable';
+import HoldingsTable from './HoldingsTable';
 
 /**
  * Main Server Component - Next.js Entrypoint
@@ -12,6 +13,8 @@ import TransactionTable from './TransactionTable';
  * REST API overhead, computes the dynamic portfolio tracking timeline algorithms, 
  * and passes the mathematically resolved static data directly to client components.
  */
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 export default async function Home() {
   // 1. Establish SQLite DB connection securely
   const db = await getDb();
@@ -22,12 +25,20 @@ export default async function Home() {
   // 3. Cast the raw dynamic SQLite rows to our strictly validated Typescript abstraction
   const investments: Transaction[] = dbTransactions.map(row => ({
     id: row.id,
-    symbol: row.symbol,
-    type: row.type,
-    exchange: row.exchange,
+    script: row.script,
     date: row.date,
-    quantity: row.quantity,
-    price: row.price
+    qty: row.qty,
+    price: row.price,
+    amount: row.amount,
+    holding_days: row.holding_days,
+    tax: row.tax,
+    remark: row.remark,
+    
+    // Map to legacy params used dynamically across components implicitly natively
+    symbol: row.script,
+    type: 'Buy',
+    exchange: 'NSE', // Defaults implicitly as exchange was removed from raw columns natively 
+    quantity: row.qty
   }));
 
   // 4. Compute daily charting metrics utilizing extracted secure finance computations
@@ -56,9 +67,41 @@ export default async function Home() {
         <StockChart data={chartData} />
       </div>
 
+      <h2 style={{ fontSize: '1.2rem', marginTop: '3rem', marginBottom: '-1rem', color: '#111827' }}>Current Holdings Snapshot</h2>
+      <HoldingsTable holdings={await Promise.all(Object.values(
+          investments.reduce((acc: any, inv: any) => {
+              const sym = inv.symbol;
+              if (!acc[sym]) acc[sym] = { symbol: sym, quantity: 0, invested: 0 };
+              if (inv.type === 'Buy') {
+                  acc[sym].quantity += inv.quantity;
+                  acc[sym].invested += inv.price * inv.quantity;
+              } else if (inv.type === 'Sell' && acc[sym].quantity > 0) {
+                  const prop = inv.quantity / acc[sym].quantity;
+                  acc[sym].quantity -= inv.quantity;
+                  acc[sym].invested -= acc[sym].invested * prop;
+              }
+              return acc;
+          }, {})
+      ).filter((h: any) => h.quantity > 0).map(async (h: any) => {
+          let currentPrice = h.invested / h.quantity;
+          try {
+              const yf = require('yahoo-finance2').default;
+              const yfInstance = new yf({ suppressNotices: ['ripHistorical', 'yahooSurvey'] });
+              const quote = await yfInstance.quote(`${h.symbol}.NS`);
+              if (quote && quote.regularMarketPrice) currentPrice = quote.regularMarketPrice;
+          } catch(e) {}
+          
+          return {
+              ...h,
+              avgPrice: h.invested / h.quantity,
+              currentPrice: currentPrice,
+              currentValue: currentPrice * h.quantity
+          }
+      }))} />
+
       {/* Structural Data Editor: Grid representation mapping seamless SQLite CRUD interactions */}
       <h2 style={{ fontSize: '1.2rem', marginTop: '3rem', marginBottom: '-1rem', color: '#111827' }}>Transaction History</h2>
-      <TransactionTable transactions={dbTransactions} />
+      <TransactionTable transactions={investments} />
     </main>
   );
 }

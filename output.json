@@ -1,0 +1,928 @@
+{
+  "scripts": [
+    {
+      "scriptName": "AWHCL",
+      "totalQuantity": 55,
+      "totalInvestedValue": 21317.27,
+      "transactions": [
+        {
+          "date": "23/03/21",
+          "quantity": 5,
+          "price": 269.81,
+          "amount": 1349.06,
+          "holdingDays": 1826
+        },
+        {
+          "date": "12/04/21",
+          "quantity": 20,
+          "price": 252.09,
+          "amount": 5041.79,
+          "holdingDays": 1806
+        },
+        {
+          "date": "08/04/25",
+          "quantity": 20,
+          "price": 513.05,
+          "amount": 10261.01,
+          "holdingDays": 349
+        },
+        {
+          "date": "09/03/26",
+          "quantity": 10,
+          "price": 466.54,
+          "amount": 4665.41,
+          "holdingDays": 14
+        }
+      ]
+    },
+    {
+      "scriptName": "AXISBANK",
+      "totalQuantity": 60,
+      "totalInvestedValue": 59178.77,
+      "transactions": [
+        {
+          "date": "08/03/22",
+          "quantity": 6,
+          "price": 650.03,
+          "amount": 3900.17,
+          "holdingDays": 1476
+        },
+        {
+          "date": "18/05/22",
+          "quantity": 6,
+          "price": 668.96,
+          "amount": 4013.75,
+          "holdingDays": 1405
+        },
+        {
+          "date": "13/06/22",
+          "quantity": 3,
+          "price": 648.32,
+          "amount": 1944.97,
+          "holdingDays": 1379
+        },
+        {
+          "date": "08/10/24",
+          "quantity": 10,
+          "price": 1156.73,
+          "amount": 11567.25,
+          "holdingDays": 531
+        },
+        {
+          "date": "28/02/25",
+          "quantity": 20,
+          "price": 1028.49,
+          "amount": 20569.74,
+          "holdingDays": 388
+        },
+        {
+          "date": "08/04/25",
+          "quantity": 10,
+          "price": 1084.63,
+          "amount": 10846.28,
+          "holdingDays": 349
+        },
+        {
+          "date": "09/03/26",
+          "quantity": 5,
+          "price": 1267.32,
+          "amount": 6336.61,
+          "holdingDays": 14
+        }
+      ]
+    },
+    {
+      "scriptName": "BHARTIARTL",
+      "totalQuantity": 48,
+      "totalInvestedValue": 49904.1,
+      "transactions": [
+        {
+          "date": "12/04/21",
+          "quantity": 15,
+          "price": 523.31,
+          "amount": 7849.63,
+          "holdingDays": 1808
+        },
+        {
+          "date": "18/05/22",
+          "quantity": 10,
+          "price": 697.38,
+          "amount": 6973.77,
+          "holdingDays": 1407
+        },
+        {
+          "date": "13/06/22",
+          "quantity": 3,
+          "price": 671.67,
+          "amount": 2015.02,
+          "holdingDays": 1381
+        },
+        {
+          "date": "28/02/25",
+          "quantity": 15,
+          "price": 1590.52,
+          "amount": 23857.74,
+          "holdingDays": 390
+        },
+        {
+          "date": "09/03/26",
+          "quantity": 5,
+          "price": 1841.59,
+          "amount": 9207.94,
+          "holdingDays": 16
+        }
+      ]
+    },
+    {
+      "scriptName": "BRIGADE",
+      "totalQuantity": 70,
+      "totalInvestedValue": 33288.46,
+      "transactions": [
+        {
+          "date": "04/11/22",
+          "quantity": 20,
+          "price": 505.47,
+          "amount": 10109.36,
+          "holdingDays": 1237
+        },
+        {
+          "date": "14/12/22",
+          "quantity": 20,
+          "price": 476.42,
+          "amount": 9528.3,
+          "holdingDays": 1197
+        },
+        {
+          "date": "16/12/22",
+          "quantity": 30,
+          "price": 455.03,
+          "amount": 13650.8,
+          "holdingDays": 1195
+        }
+      ]
+    },
+    {
+      "scriptName": "CANFINHOME",
+      "totalQuantity": 50,
+      "totalInvestedValue": 34428.05,
+      "transactions": [
+        {
+          "date": "13/10/22",
+          "quantity": 20,
+          "price": 504.78,
+          "amount": 10095.65,
+          "holdingDays": 1259
+        },
+        {
+          "date": "05/08/24",
+          "quantity": 10,
+          "price": 778.16,
+          "amount": 7781.62,
+          "holdingDays": 597
+        },
+        {
+          "date": "08/10/24",
+          "quantity": 15,
+          "price": 836.84,
+          "amount": 12552.57,
+          "holdingDays": 533
+        },
+        {
+          "date": "09/03/26",
+          "quantity": 5,
+          "price": 799.64,
+          "amount": 3998.21,
+          "holdingDays": 16
+        }
+      ]
+    },
+    {
+      "scriptName": "DLF",
+      "totalQuantity": 60,
+      "totalInvestedValue": 28326.59,
+      "transactions": [
+        {
+          "date": "30/03/22",
+          "quantity": 10,
+          "price": 386.79,
+          "amount": 3867.95,
+          "holdingDays": 1456
+        },
+        {
+          "date": "13/06/22",
+          "quantity": 20,
+          "price": 307.47,
+          "amount": 6149.36,
+          "holdingDays": 1381
+        },
+        {
+          "date": "08/04/25",
+          "quantity": 20,
+          "price": 634.31,
+          "amount": 12686.16,
+          "holdingDays": 351
+        },
+        {
+          "date": "09/03/26",
+          "quantity": 10,
+          "price": 562.31,
+          "amount": 5623.12,
+          "holdingDays": 16
+        }
+      ]
+    },
+    {
+      "scriptName": "HINDALCO",
+      "totalQuantity": 96,
+      "totalInvestedValue": 47434.58,
+      "transactions": [
+        {
+          "date": "01/09/22",
+          "quantity": 16,
+          "price": 428.42,
+          "amount": 6854.67,
+          "holdingDays": 1301
+        },
+        {
+          "date": "12/09/22",
+          "quantity": 10,
+          "price": 433.43,
+          "amount": 4334.33,
+          "holdingDays": 1290
+        },
+        {
+          "date": "19/09/22",
+          "quantity": 10,
+          "price": 415.71,
+          "amount": 4157.14,
+          "holdingDays": 1283
+        },
+        {
+          "date": "27/09/22",
+          "quantity": 10,
+          "price": 376.25,
+          "amount": 3762.52,
+          "holdingDays": 1275
+        },
+        {
+          "date": "24/10/22",
+          "quantity": 10,
+          "price": 397.69,
+          "amount": 3976.9,
+          "holdingDays": 1248
+        },
+        {
+          "date": "28/02/25",
+          "quantity": 20,
+          "price": 632.1,
+          "amount": 12642.08,
+          "holdingDays": 390
+        },
+        {
+          "date": "08/04/25",
+          "quantity": 20,
+          "price": 585.35,
+          "amount": 11706.94,
+          "holdingDays": 351
+        }
+      ]
+    },
+    {
+      "scriptName": "ICICIBANK",
+      "totalQuantity": 7,
+      "totalInvestedValue": 8209.69,
+      "transactions": [
+        {
+          "date": "24/10/22",
+          "quantity": 2,
+          "price": 923.21,
+          "amount": 1846.41,
+          "holdingDays": 1248
+        },
+        {
+          "date": "09/03/26",
+          "quantity": 5,
+          "price": 1272.66,
+          "amount": 6363.28,
+          "holdingDays": 16
+        }
+      ]
+    },
+    {
+      "scriptName": "IDFCFIRSTB",
+      "totalQuantity": 355,
+      "totalInvestedValue": 20168.2,
+      "transactions": [
+        {
+          "date": "10/10/24",
+          "quantity": 155,
+          "price": 49.3,
+          "amount": 7641.53,
+          "holdingDays": 531
+        },
+        {
+          "date": "08/04/25",
+          "quantity": 100,
+          "price": 58.23,
+          "amount": 5823.05,
+          "holdingDays": 351
+        },
+        {
+          "date": "09/03/26",
+          "quantity": 100,
+          "price": 67.04,
+          "amount": 6703.62,
+          "holdingDays": 16
+        }
+      ]
+    },
+    {
+      "scriptName": "INDHOTEL",
+      "totalQuantity": 40,
+      "totalInvestedValue": 24563.26,
+      "transactions": [
+        {
+          "date": "05/08/24",
+          "quantity": 30,
+          "price": 617.55,
+          "amount": 18526.39,
+          "holdingDays": 597
+        },
+        {
+          "date": "09/03/26",
+          "quantity": 10,
+          "price": 603.69,
+          "amount": 6036.87,
+          "holdingDays": 16
+        }
+      ]
+    },
+    {
+      "scriptName": "M&MFIN",
+      "totalQuantity": 340,
+      "totalInvestedValue": 69019.72,
+      "transactions": [
+        {
+          "date": "03/05/21",
+          "quantity": 30,
+          "price": 161.37,
+          "amount": 4840.97,
+          "holdingDays": 1787
+        },
+        {
+          "date": "24/02/22",
+          "quantity": 30,
+          "price": 141.99,
+          "amount": 4259.57,
+          "holdingDays": 1490
+        },
+        {
+          "date": "08/03/22",
+          "quantity": 100,
+          "price": 129.99,
+          "amount": 12998.62,
+          "holdingDays": 1478
+        },
+        {
+          "date": "27/09/22",
+          "quantity": 30,
+          "price": 185.82,
+          "amount": 5574.5,
+          "holdingDays": 1275
+        },
+        {
+          "date": "26/12/22",
+          "quantity": 30,
+          "price": 227.79,
+          "amount": 6833.69,
+          "holdingDays": 1185
+        },
+        {
+          "date": "05/08/24",
+          "quantity": 50,
+          "price": 290.98,
+          "amount": 14549.0,
+          "holdingDays": 597
+        },
+        {
+          "date": "08/04/25",
+          "quantity": 50,
+          "price": 259.57,
+          "amount": 12978.59,
+          "holdingDays": 351
+        },
+        {
+          "date": "12/03/26",
+          "quantity": 20,
+          "price": 349.24,
+          "amount": 6984.78,
+          "holdingDays": 13
+        }
+      ]
+    },
+    {
+      "scriptName": "MAZDOCK",
+      "totalQuantity": 33,
+      "totalInvestedValue": 28819.37,
+      "transactions": [
+        {
+          "date": "18/12/20",
+          "quantity": 20,
+          "price": 111.76,
+          "amount": 2235.22,
+          "holdingDays": 1923
+        },
+        {
+          "date": "08/10/24",
+          "quantity": 10,
+          "price": 1948.12,
+          "amount": 19481.18,
+          "holdingDays": 533
+        },
+        {
+          "date": "09/03/26",
+          "quantity": 3,
+          "price": 2367.66,
+          "amount": 7102.97,
+          "holdingDays": 16
+        }
+      ]
+    },
+    {
+      "scriptName": "NAUKRI",
+      "totalQuantity": 10,
+      "totalInvestedValue": 10458.25,
+      "transactions": [
+        {
+          "date": "27/09/22",
+          "quantity": 5,
+          "price": 770.05,
+          "amount": 3850.27,
+          "holdingDays": 1275
+        },
+        {
+          "date": "08/04/25",
+          "quantity": 5,
+          "price": 1321.6,
+          "amount": 6607.98,
+          "holdingDays": 351
+        }
+      ]
+    },
+    {
+      "scriptName": "OFSS",
+      "totalQuantity": 2,
+      "totalInvestedValue": 10540.15,
+      "transactions": [
+        {
+          "date": "27/09/22",
+          "quantity": 1,
+          "price": 3013.67,
+          "amount": 3013.67,
+          "holdingDays": 1275
+        },
+        {
+          "date": "08/04/25",
+          "quantity": 1,
+          "price": 7526.48,
+          "amount": 7526.48,
+          "holdingDays": 351
+        }
+      ]
+    },
+    {
+      "scriptName": "POLYCAB",
+      "totalQuantity": 8,
+      "totalInvestedValue": 23525.99,
+      "transactions": [
+        {
+          "date": "22/10/21",
+          "quantity": 5,
+          "price": 2292.4,
+          "amount": 11462.02,
+          "holdingDays": 1615
+        },
+        {
+          "date": "24/02/22",
+          "quantity": 1,
+          "price": 2301.79,
+          "amount": 2301.79,
+          "holdingDays": 1490
+        },
+        {
+          "date": "13/06/22",
+          "quantity": 1,
+          "price": 2238.18,
+          "amount": 2238.18,
+          "holdingDays": 1381
+        },
+        {
+          "date": "12/03/26",
+          "quantity": 1,
+          "price": 7524.0,
+          "amount": 7524.0,
+          "holdingDays": 13
+        }
+      ]
+    },
+    {
+      "scriptName": "SAIL",
+      "totalQuantity": 370,
+      "totalInvestedValue": 37264.69,
+      "transactions": [
+        {
+          "date": "01/09/22",
+          "quantity": 20,
+          "price": 81.49,
+          "amount": 1629.72,
+          "holdingDays": 1301
+        },
+        {
+          "date": "24/10/22",
+          "quantity": 50,
+          "price": 78.93,
+          "amount": 3946.29,
+          "holdingDays": 1248
+        },
+        {
+          "date": "28/02/25",
+          "quantity": 200,
+          "price": 104.22,
+          "amount": 20843.9,
+          "holdingDays": 390
+        },
+        {
+          "date": "08/04/25",
+          "quantity": 100,
+          "price": 108.45,
+          "amount": 10844.78,
+          "holdingDays": 351
+        }
+      ]
+    },
+    {
+      "scriptName": "SBIN",
+      "totalQuantity": 75,
+      "totalInvestedValue": 34066.44,
+      "transactions": [
+        {
+          "date": "05/04/21",
+          "quantity": 10,
+          "price": 355.37,
+          "amount": 3553.65,
+          "holdingDays": 1815
+        },
+        {
+          "date": "12/04/21",
+          "quantity": 30,
+          "price": 328.56,
+          "amount": 9856.66,
+          "holdingDays": 1808
+        },
+        {
+          "date": "18/05/22",
+          "quantity": 10,
+          "price": 465.27,
+          "amount": 4652.68,
+          "holdingDays": 1407
+        },
+        {
+          "date": "13/06/22",
+          "quantity": 5,
+          "price": 447.15,
+          "amount": 2235.73,
+          "holdingDays": 1381
+        },
+        {
+          "date": "28/02/25",
+          "quantity": 20,
+          "price": 688.39,
+          "amount": 13767.72,
+          "holdingDays": 390
+        }
+      ]
+    },
+    {
+      "scriptName": "TATACONSUM",
+      "totalQuantity": 41,
+      "totalInvestedValue": 36284.28,
+      "transactions": [
+        {
+          "date": "15/01/24",
+          "quantity": 2,
+          "price": 844.57,
+          "amount": 1689.14,
+          "holdingDays": 800
+        },
+        {
+          "date": "15/01/24",
+          "quantity": 12,
+          "price": 844.57,
+          "amount": 10134.86,
+          "holdingDays": 800
+        },
+        {
+          "date": "15/01/24",
+          "quantity": 5,
+          "price": 1485.36,
+          "amount": 7426.8,
+          "holdingDays": 800
+        },
+        {
+          "date": "15/01/24",
+          "quantity": 1,
+          "price": 772.65,
+          "amount": 772.65,
+          "holdingDays": 800
+        },
+        {
+          "date": "15/01/24",
+          "quantity": 7,
+          "price": 772.65,
+          "amount": 5408.55,
+          "holdingDays": 800
+        },
+        {
+          "date": "15/01/24",
+          "quantity": 5,
+          "price": 882.4,
+          "amount": 4412.0,
+          "holdingDays": 800
+        },
+        {
+          "date": "05/02/24",
+          "quantity": 3,
+          "price": 0.0,
+          "amount": 0.0,
+          "holdingDays": 779
+        },
+        {
+          "date": "12/03/26",
+          "quantity": 6,
+          "price": 1073.38,
+          "amount": 6440.28,
+          "holdingDays": 13
+        }
+      ]
+    },
+    {
+      "scriptName": "TATAPOWER",
+      "totalQuantity": 180,
+      "totalInvestedValue": 49943.9,
+      "transactions": [
+        {
+          "date": "18/05/22",
+          "quantity": 20,
+          "price": 241.04,
+          "amount": 4820.88,
+          "holdingDays": 1407
+        },
+        {
+          "date": "13/06/22",
+          "quantity": 10,
+          "price": 220.76,
+          "amount": 2207.61,
+          "holdingDays": 1381
+        },
+        {
+          "date": "27/09/22",
+          "quantity": 10,
+          "price": 219.51,
+          "amount": 2195.07,
+          "holdingDays": 1275
+        },
+        {
+          "date": "27/12/22",
+          "quantity": 40,
+          "price": 207.41,
+          "amount": 8296.23,
+          "holdingDays": 1184
+        },
+        {
+          "date": "09/05/23",
+          "quantity": 50,
+          "price": 204.85,
+          "amount": 10242.28,
+          "holdingDays": 1051
+        },
+        {
+          "date": "08/10/24",
+          "quantity": 50,
+          "price": 443.64,
+          "amount": 22181.83,
+          "holdingDays": 533
+        }
+      ]
+    },
+    {
+      "scriptName": "TATASTEEL",
+      "totalQuantity": 255,
+      "totalInvestedValue": 34486.07,
+      "transactions": [
+        {
+          "date": "01/09/22",
+          "quantity": 20,
+          "price": 107.69,
+          "amount": 2153.88,
+          "holdingDays": 1301
+        },
+        {
+          "date": "12/09/22",
+          "quantity": 30,
+          "price": 107.09,
+          "amount": 3212.75,
+          "holdingDays": 1290
+        },
+        {
+          "date": "26/12/22",
+          "quantity": 30,
+          "price": 105.79,
+          "amount": 3173.59,
+          "holdingDays": 1185
+        },
+        {
+          "date": "05/08/24",
+          "quantity": 50,
+          "price": 151.32,
+          "amount": 7566.25,
+          "holdingDays": 597
+        },
+        {
+          "date": "28/02/25",
+          "quantity": 50,
+          "price": 136.16,
+          "amount": 6808.11,
+          "holdingDays": 390
+        },
+        {
+          "date": "08/04/25",
+          "quantity": 50,
+          "price": 136.76,
+          "amount": 6838.25,
+          "holdingDays": 351
+        },
+        {
+          "date": "09/03/26",
+          "quantity": 25,
+          "price": 189.33,
+          "amount": 4733.24,
+          "holdingDays": 16
+        }
+      ]
+    },
+    {
+      "scriptName": "TCS",
+      "totalQuantity": 12,
+      "totalInvestedValue": 36687.68,
+      "transactions": [
+        {
+          "date": "12/09/22",
+          "quantity": 1,
+          "price": 3248.1,
+          "amount": 3248.1,
+          "holdingDays": 1290
+        },
+        {
+          "date": "27/09/22",
+          "quantity": 1,
+          "price": 3024.52,
+          "amount": 3024.52,
+          "holdingDays": 1275
+        },
+        {
+          "date": "24/10/22",
+          "quantity": 2,
+          "price": 3176.76,
+          "amount": 6353.52,
+          "holdingDays": 1248
+        },
+        {
+          "date": "28/02/25",
+          "quantity": 4,
+          "price": 3488.37,
+          "amount": 13953.48,
+          "holdingDays": 390
+        },
+        {
+          "date": "09/03/26",
+          "quantity": 4,
+          "price": 2527.01,
+          "amount": 10108.06,
+          "holdingDays": 16
+        }
+      ]
+    },
+    {
+      "scriptName": "TMCV",
+      "totalQuantity": 140,
+      "totalInvestedValue": 29349.97,
+      "transactions": [
+        {
+          "date": "12/04/21",
+          "quantity": 30,
+          "price": 90.69,
+          "amount": 2720.8,
+          "holdingDays": 1808
+        },
+        {
+          "date": "24/02/22",
+          "quantity": 10,
+          "price": 136.8,
+          "amount": 1367.98,
+          "holdingDays": 1490
+        },
+        {
+          "date": "18/05/22",
+          "quantity": 10,
+          "price": 132.72,
+          "amount": 1327.18,
+          "holdingDays": 1407
+        },
+        {
+          "date": "13/06/22",
+          "quantity": 5,
+          "price": 127.35,
+          "amount": 636.77,
+          "holdingDays": 1381
+        },
+        {
+          "date": "05/08/24",
+          "quantity": 15,
+          "price": 322.69,
+          "amount": 4840.38,
+          "holdingDays": 597
+        },
+        {
+          "date": "28/02/25",
+          "quantity": 30,
+          "price": 196.13,
+          "amount": 5883.99,
+          "holdingDays": 390
+        },
+        {
+          "date": "08/04/25",
+          "quantity": 20,
+          "price": 188.13,
+          "amount": 3762.57,
+          "holdingDays": 351
+        },
+        {
+          "date": "12/03/26",
+          "quantity": 20,
+          "price": 440.52,
+          "amount": 8810.3,
+          "holdingDays": 13
+        }
+      ]
+    },
+    {
+      "scriptName": "VEDL",
+      "totalQuantity": 100,
+      "totalInvestedValue": 29128.71,
+      "transactions": [
+        {
+          "date": "02/11/22",
+          "quantity": 30,
+          "price": 296.67,
+          "amount": 8900.22,
+          "holdingDays": 1239
+        },
+        {
+          "date": "26/12/22",
+          "quantity": 30,
+          "price": 296.72,
+          "amount": 8901.73,
+          "holdingDays": 1185
+        },
+        {
+          "date": "09/05/23",
+          "quantity": 40,
+          "price": 283.17,
+          "amount": 11326.76,
+          "holdingDays": 1051
+        }
+      ]
+    },
+    {
+      "scriptName": "ZYDUSLIFE",
+      "totalQuantity": 20,
+      "totalInvestedValue": 12434.33,
+      "transactions": [
+        {
+          "date": "18/04/22",
+          "quantity": 10,
+          "price": 364.81,
+          "amount": 3648.05,
+          "holdingDays": 1437
+        },
+        {
+          "date": "28/02/25",
+          "quantity": 10,
+          "price": 878.63,
+          "amount": 8786.28,
+          "holdingDays": 390
+        }
+      ]
+    }
+  ]
+}
