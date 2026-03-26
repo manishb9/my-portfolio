@@ -1,65 +1,73 @@
-# Portfolio Tracker
+# Portfolio Tracker (Junior Engineer & Trainee Guide)
 
-A minimal, lightning-fast interactive portfolio tracking application built natively within **Next.js**.
+Welcome to the **Next.js Portfolio Tracker**! This application allows users to input their stock market trades and mathematically visualizes their portfolio's growth over time using live market data.
 
-This project solves the complexities of tracking various purchases across different exchanges (like **NSE** and **BSE**) over your entire investment timeline. It features deeply integrated autocomplete functions scanning thousands of listed real-world equities via Yahoo Finance, allowing you to instantly log buy/sell positions and visualize your exact total invested capital versus your fluid portfolio market value.
-
----
-
-## 🚀 Key Features
-
-*   **Two-in-One Performance Chart**: Overlaps a step-chart representing your absolute cash deployment against a dynamically fluctuating historic curve representing your precise market valuation over time.
-*   **Intelligent Local Database (SQLite)**: A zero-configuration local embedded `sqlite3` database silently spins up inside Next.js to indefinitely persist your inputted transactions completely privately. There is no separate backend service to run!
-*   **Real-time Smart Autocomplete**: The transaction form natively hits Yahoo Finance in the background securely via Server Actions. Type any corporate stock like "TCS" or "Infosys" and the backend parses out exact Indian Exchange suffixes (`.NS`/`.BO`) implicitly without any tricky API keys.
+This `README.md` is specifically written as an **onboarding guide for trainee engineers**. It explains the architecture, how React works in this app, and how data moves from the database to the screen.
 
 ---
 
-## 🖥 Requirements
+## 🏗 Architecture Overview
 
-*   **Node.js**: `v18.x` or higher
-*   **npm** (comes with Node)
-
----
-
-## 🛠 Local Setup & Installation
-
-If you clone this repository and want to run it flawlessly on your local machine:
-
-**1. Install Dependencies**
-Open your terminal inside the project root and run:
-```bash
-npm install
-```
-*This downloads the exact required packages including `sqlite3`, `recharts`, `yahoo-finance2`, and natively resolves the Next.js ecosystem.*
-
-**2. Start the Application Engine**
-Because this app relies tightly on Next.js **Server Actions** exclusively for its data layer, no secondary Node.js environment or standalone database software is required!
-```bash
-npm run dev
-```
-
-**3. Open the App**
-Open your web browser and navigate to:
-```
-http://localhost:3000
-```
+This app is built using **Next.js (App Router)**. Here is how the technologies work together:
+1. **Frontend (React)**: We use React components (`.tsx` files) to build the UI (Tables, Forms, Charts).
+2. **Backend (Server Actions)**: Next.js securely runs Node.js code on the server using Server Actions (`app/actions.ts`) so we don't need a separate Express.js REST API.
+3. **Database (SQLite)**: We use a local `portfolio.db` file. SQLite is zero-setup; it writes data directly to a local file.
+4. **Market Data API (Yahoo Finance)**: We use the `yahoo-finance2` library to securely download historical stock prices.
 
 ---
 
-## 🗄 How the Database works (Zero-Setup)
+## 📂 File Structure Explained
 
-You don't need to install MySQL, PostgreSQL, or MongoDB. 
+Here is a breakdown of what each file does. **Look at these files in this exact order to understand the app:**
 
-The first time you successfully spin up the app and fire it open seamlessly, our `lib/db.ts` file automatically detects if a `portfolio.db` file exists. If it doesn't, it initializes a strict SQLite environment and maps up your entire `transactions` schema cleanly. 
-- **Persisted**: If you restart your laptop or server, your data guarantees itself perfectly intact inside `portfolio.db`.
-- **Private**: By default, `.gitignore` hides `.db` files deliberately so you never accidentally upload your highly private financial records strictly to GitHub.
+### 1. `lib/db.ts` (Database Setup)
+- **What it does**: Initializes the SQLite Database. If `portfolio.db` does not exist, it creates it and creates a `transactions` table.
+- **Why it matters**: This guarantees the app works out-of-the-box without needing complicated SQL setup.
+
+### 2. `app/page.tsx` (The Main Dashboard)
+- **What it does**: This is a **React Server Component**. It runs *on the server* before generating HTML. 
+- **Flow**: It connects to SQLite, queries all transactions, formats them, calculates Live Prices via Yahoo Finance, passes data into `finance.ts` for chronological chart mapping, and renders the children Client Components.
+
+### 3. `lib/finance.ts` (The Brain of the App)
+- **What it does**: This takes your raw transactions and builds a day-by-day timeline array.
+- **How it works**: It fetches thousands of historical market prices via `yf.chart()` and simulates your portfolio day by day. It adds up your "Invested Amount" vs "Current Value" and outputs an array that the line chart can read.
+
+### 4. `app/HoldingsTable.tsx` & `app/TransactionTable.tsx` (React UI)
+- **What they do**: These receive data via "props" (properties passed from the parent) and map through them to return HTML `<table>` elements. 
+
+### 5. `app/StockChart.tsx` (The Chart)
+- **What it does**: Uses the `recharts` library to draw a Line Chart. It takes the `chartData` array generated by `finance.ts` and maps the X-Axis to Dates and the Y-Axis to Rupees (₹).
+
+### 6. `app/actions.ts` (Server Actions)
+- **What it does**: Contains JavaScript functions that directly mutate the database.
+- **How it works**: When a user submits the `<form>` in `TransactionForm.tsx`, Next.js calls these *server-side* functions automatically. We use `revalidatePath('/')` to force Next.js to refresh the page immediately after saving!
 
 ---
 
-## 📦 Deployment (VPS Guide)
+## 🏃‍♂️ How to Run the App Locally
 
-Because we isolated everything directly inside the React/Next.js environment without standalone services, deploying this onto an Ubuntu/Debian VPS is a breeze:
-1. Clone this repository onto your server.
-2. Run `npm install` and `npm run build`.
-3. Startup Next.js strictly using standard PM2 configs (`pm2 start npm --name "portfolio" -- start`).
-4. Reverse-proxy port `3000` out strictly through NGINX!
+1. **Install Dependencies**:
+   Open terminal and run:
+   ```bash
+   npm install
+   ```
+
+2. **Start the Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+3. **View the Application**:
+   Open your browser and navigate to `http://localhost:3000`.
+
+---
+
+## 💡 Key React Concepts Used Here
+
+As a junior engineer new to React, watch out for these concepts in the code:
+
+* **'use client'**: You'll see this at the top of some files. Next.js defaults to running code on the Server. If we need browser interactivity (like `useState` or drawing a Chart), we put `'use client'` at the top so Next.js knows to send that JavaScript to the user's browser.
+* **Props**: Components like `<TransactionTable transactions={investments} />` pass data directly down to child files.
+* **map()**: In React, we rarely write HTML loops. Instead, we use `Array.map()` to loop over data arrays and return JSX (HTML mixed with JavaScript) for each item, rendering tables dynamically!
+
+Happy Coding! Study the inline comments inside `app/page.tsx` and `lib/finance.ts` for deep dives into specific functions!
