@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Infosys Stock Chart",
-  description: "Daily EOD stock chart for Infosys",
+  title: "Portfolio Tracker",
+  description: "Dynamic algorithmic nested investment tracking timeline",
 };
 
 export default function RootLayout({
@@ -13,7 +13,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body style={{ backgroundColor: '#87ceeb', margin: 0, padding: 0 }}>
+        {children}
+      </body>
     </html>
   );
 }

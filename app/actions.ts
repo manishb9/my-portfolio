@@ -8,6 +8,8 @@
 import { getDb } from '../lib/db';
 import { revalidatePath } from 'next/cache';
 import YahooFinance from 'yahoo-finance2';
+import { generatePortfolioTimeline } from '../lib/finance';
+import { Transaction } from '../types';
 
 const yf = new YahooFinance({ suppressNotices: ['ripHistorical'] });
 
@@ -103,4 +105,17 @@ export async function deleteTransaction(id: number) {
     // Again, `?` natively sanitizes specific inputs explicitly!
     await db.run('DELETE FROM transactions WHERE id = ?', [id]);
     revalidatePath('/'); // Refresh UI instantly
+}
+
+export async function getScriptTimeline(symbol: string) {
+    const db = await getDb();
+    const dbTransactions = await db.all('SELECT * FROM transactions ORDER BY date ASC');
+    const investments: Transaction[] = dbTransactions.map(row => ({
+        ...row,
+        symbol: row.script,
+        type: 'Buy',
+        quantity: row.qty
+    }));
+    
+    return await generatePortfolioTimeline(investments, symbol);
 }

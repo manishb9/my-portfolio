@@ -3,38 +3,24 @@ import { getDb } from '../lib/db';
 import { generatePortfolioTimeline } from '../lib/finance';
 import { Transaction } from '../types';
 import TransactionForm from './TransactionForm';
-import TransactionTable from './TransactionTable';
-import HoldingsTable from './HoldingsTable';
+import Link from 'next/link';
+import ScriptChartSection from './ScriptChartSection';
+import PriceVsAvgSection from './PriceVsAvgSection';
 
 /**
  * Main Server Component - Next.js Entrypoint
- * 
- * In Next.js (App Router), any component inside the `app` folder (like this one)
- * is a "Server Component" by default. This means it NEVER sends its JavaScript 
- * to the user's browser. It just generates plain HTML on the server.
- * 
- * Because it's on the server, we can securely talk to our Database directly here 
- * without needing to create API routes like `/api/getTransactions`.
  */
-export const dynamic = 'force-dynamic'; // Tells Next.js to ALWAYS run this file fresh on every page load (no caching)
-export const fetchCache = 'force-no-store'; // Tells Next.js NOT to cache external API fetches (like Yahoo Finance)
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 export default async function Home() {
-  // ==========================================
-  // 1. FETCH DATA FROM DATABASE
-  // ==========================================
-  // We call our internal SQLite database helper to get the active connection
+  // 1. Establish SQLite DB connection securely
   const db = await getDb();
 
-  // We write an SQL query to get every row from the `transactions` table.
-  // ORDER BY date ASC ensures we get them in chronological order (oldest first).
+  // 2. Fetch raw transaction rows natively, implicitly ordered chronologically
   const dbTransactions = await db.all('SELECT * FROM transactions ORDER BY date ASC');
 
-  // ==========================================
-  // 2. FORMAT DATA FOR OUR APP
-  // ==========================================
-  // `dbTransactions` contains raw database rows. We use `.map()` to loop over 
-  // every row and convert it into a strictly typed TypeScript object (`Transaction`).
+  // 3. Format raw SQL objects to TS Interfaces
   const investments: Transaction[] = dbTransactions.map(row => ({
     id: row.id,
     script: row.script,
@@ -46,132 +32,81 @@ export default async function Home() {
     tax: row.tax,
     remark: row.remark,
     
-    // We also set some "legacy" names that our charting library expects
+    // Map to legacy params used dynamically across components
     symbol: row.script,
     type: 'Buy',
     exchange: 'NSE',
     quantity: row.qty
   }));
 
-  // ==========================================
-  // 3. GENERATE CHART DATA
-  // ==========================================
-  // We pass our formatted `investments` to our finance algorithm.
-  // Input: An array of our raw trades (e.g., [{ symbol: 'TCS', date: '2022-01-01', ... }])
-  // Output: { chartData: [...] } which proves day-by-day performance of the portfolio.
+  // 4. Compute daily charting metrics using our finance algorithm
   const { chartData, lastMarketDate } = await generatePortfolioTimeline(investments);
 
+  // 5. Extract unique script symbols for the breakdown chart
+  const uniqueSymbols = Array.from(new Set(investments.map(inv => inv.symbol))).sort();
 
-  // ==========================================
-  // 4. CALCULATE LIVE HOLDINGS FOR TABLE
-  // ==========================================
-  // This logic groups all our separate trades by their stock symbol and calculates 
-  // how many total shares we have and how much money we invested in them.
-
-  // .reduce() loops over the `investments` array and builds a single object (`acc`) tracking each stock.
-  const groupedHoldingsMap = investments.reduce((acc: any, inv: any) => {
-      const sym = inv.symbol;
-      
-      // If we haven't seen this stock before, initialize it in our tracker object
-      if (!acc[sym]) {
-          acc[sym] = { symbol: sym, quantity: 0, invested: 0 };
-      }
-      
-      // If the trade is a 'Buy', we add to our total quantity and invested money
-      if (inv.type === 'Buy') {
-          acc[sym].quantity += inv.quantity;
-          acc[sym].invested += inv.price * inv.quantity;
-      } 
-      // If the trade is a 'Sell', we reduce our total quantity and proportionally reduce the invested money
-      else if (inv.type === 'Sell' && acc[sym].quantity > 0) {
-          const prop = inv.quantity / acc[sym].quantity;
-          acc[sym].quantity -= inv.quantity;
-          acc[sym].invested -= acc[sym].invested * prop;
-      }
-      return acc;
-  }, {});
-
-  // Convert our grouped object back into an array using Object.values(), then filter 
-  // out any stocks we sold completely (quantity > 0).
-  const currentHoldingsArray = Object.values(groupedHoldingsMap).filter((h: any) => h.quantity > 0);
-
-  // Now we use `Promise.all` with `.map()` because we need to pause and securely fetch 
-  // the live Internet price for EVERY stock asynchronously using Yahoo Finance.
-  const holdingsDataForTable = await Promise.all(
-      currentHoldingsArray.map(async (h: any) => {
-          // Default to exactly what we paid if the internet fails
-          let currentPrice = h.invested / h.quantity; 
-
-          try {
-              // Import the yahoo-finance package and fetch the real-time quote natively!
-              const yf = require('yahoo-finance2').default;
-              const yfInstance = new yf({ suppressNotices: ['ripHistorical', 'yahooSurvey'] });
-              
-              // We append ".NS" because the Indian National Stock Exchange requires that suffix dynamically!
-              const quote = await yfInstance.quote(`${h.symbol}.NS`);
-              
-              if (quote && quote.regularMarketPrice) {
-                  currentPrice = quote.regularMarketPrice; // Overwrite our default with the true live price
-              }
-          } catch(e) {
-              console.log("Failed to fetch live price for", h.symbol);
-          }
-          
-          return {
-              ...h, 
-              avgPrice: h.invested / h.quantity, // Average price paid per share
-              currentPrice: currentPrice, // The modern live price
-              currentValue: currentPrice * h.quantity // Total worth today!
-          }
-      })
-  );
-
-
-  // ==========================================
-  // 5. RENDER THE HTML (JSX)
-  // ==========================================
-  // React uses "JSX" so you can write HTML directly inside JavaScript functions!
-  // Any variable evaluated inside curly brackets {...} is evaluated dynamically.
   return (
-    <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem' }}>
-      <h1 style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>My Portfolio Dashboard</h1>
+    <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem', backgroundColor: '#f3f4f6', minHeight: '100vh', boxShadow: '0 0 20px rgba(0,0,0,0.05)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 'bold', margin: '0' }}>Portfolio Tracker</h1>
+        <Link 
+            href="/history" 
+            style={{ 
+                background: '#111827', color: '#fff', padding: '10px 20px', 
+                borderRadius: '8px', textDecoration: 'none', fontSize: '0.95rem', fontWeight: 600,
+                boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' 
+            }}
+        >
+            View Portfolio Details &rarr;
+        </Link>
+      </div>
+
       <p style={{ color: '#666', marginBottom: '2rem' }}>
         Track your investments historically natively in Next.js
       </p>
 
-      {/* 
-        This is a "Client Component". We pass no 'props' (arguments) to it. 
-        It renders the interactive input form natively on the browser.
-      */}
-      <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem', color: '#111827' }}>Add New Transaction</h2>
-      <TransactionForm />
+      {/* Input Section */}
+      <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', marginBottom: '2rem', border: '1px solid #e5e7eb' }}>
+        <h2 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: '#111827' }}>Add New Transaction</h2>
+        <TransactionForm />
+      </div>
 
+      {/* Chart Visualization Section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1rem' }}>
         <h2 style={{ fontSize: '1.2rem', margin: 0, color: '#111827' }}>Performance Chart</h2>
-        
-        {/* If lastMarketDate exists natively, we display it securely */}
         {lastMarketDate && (
-          <span style={{ fontSize: '0.9rem', color: '#666' }}>Data till {lastMarketDate}</span>
+          <span style={{ fontSize: '0.9rem', color: '#666' }}>Last Data Point: {lastMarketDate}</span>
         )}
       </div>
 
-      <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)' }}>
-        {/* We pass our `chartData` array exactly straight to the custom <StockChart /> component! */}
+      <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)', border: '1px solid #e5e7eb' }}>
+        {chartData.length > 0 && (
+          <div style={{ display: 'flex', gap: '2rem', marginBottom: '2rem', borderBottom: '1px solid #f3f4f6', paddingBottom: '1rem' }}>
+            <div>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: '#6b7280', fontWeight: 500, textTransform: 'uppercase' }}>Total Invested</p>
+              <p style={{ margin: '4px 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#111827' }}>₹{chartData[chartData.length - 1].investedValue.toLocaleString()}</p>
+            </div>
+            <div>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: '#6b7280', fontWeight: 500, textTransform: 'uppercase' }}>Portfolio Value</p>
+              <p style={{ margin: '4px 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: (chartData[chartData.length - 1].portfolioValue >= chartData[chartData.length - 1].investedValue ? '#10b981' : '#ef4444') }}>₹{chartData[chartData.length - 1].portfolioValue.toLocaleString()}</p>
+            </div>
+            <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#6b7280', fontWeight: 500, textTransform: 'uppercase' }}>Net Unrealized P&L</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: (chartData[chartData.length - 1].portfolioValue >= chartData[chartData.length - 1].investedValue ? '#10b981' : '#ef4444') }}>
+                    {chartData[chartData.length - 1].portfolioValue >= chartData[chartData.length - 1].investedValue ? '+' : ''}
+                    {((chartData[chartData.length - 1].portfolioValue - chartData[chartData.length - 1].investedValue) / chartData[chartData.length - 1].investedValue * 100).toFixed(2)}%
+                </p>
+            </div>
+          </div>
+        )}
         <StockChart data={chartData} />
       </div>
 
-      <h2 style={{ fontSize: '1.2rem', marginTop: '3rem', marginBottom: '-1rem', color: '#111827' }}>Current Holdings Snapshot</h2>
-      {/* 
-        We pass the `holdingsDataForTable` completely resolved live market values 
-        directly into the Holdings table props securely!
-      */}
-      <HoldingsTable holdings={holdingsDataForTable} />
+      {/* Script Specific Analysis Section */}
+      <ScriptChartSection symbols={uniqueSymbols} />
 
-      <h2 style={{ fontSize: '1.2rem', marginTop: '3rem', marginBottom: '-1rem', color: '#111827' }}>Transaction History</h2>
-      {/* 
-        This renders the basic raw list of Trades!
-      */}
-      <TransactionTable transactions={investments} />
+      {/* NEW: Price vs Average Analysis Section */}
+      <PriceVsAvgSection symbols={uniqueSymbols} />
     </main>
   );
 }

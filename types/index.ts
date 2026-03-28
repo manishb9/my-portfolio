@@ -28,4 +28,6 @@ export interface DailyPerformance {
     portfolioValue: number;
     isPurchase: boolean;
     purchaseDetails?: Pick<Transaction, 'symbol' | 'quantity' | 'price'>[];
+    avgPrice?: number;
+    currentPrice?: number;
 }

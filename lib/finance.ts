@@ -18,7 +18,7 @@ const yf = new YahooFinance({ suppressNotices: ['ripHistorical'] });
  * 2. We are fetching dozens of stocks completely concurrently (`Promise.all`) to ensure the page
  *    loads entirely instantly safely. We cannot await each API ping inherently in a simple `for` loop!
  */
-export async function generatePortfolioTimeline(investments: Transaction[]): Promise<{ chartData: DailyPerformance[], lastMarketDate: string | null }> {
+export async function generatePortfolioTimeline(investments: Transaction[], filterScript?: string): Promise<{ chartData: DailyPerformance[], lastMarketDate: string | null }> {
     // If the user has made 0 investments, just gracefully return empty arrays safely back to React
     if (investments.length === 0) return { chartData: [], lastMarketDate: null };
 
@@ -27,12 +27,17 @@ export async function generatePortfolioTimeline(investments: Transaction[]): Pro
     // ===============================================
     // `Set()` is a JavaScript object that removes exact duplicates. If you bought "TCS" 10 times, 
     // it will ensure we only ask Yahoo Finance for "TCS" once globally!
-    const uniqueTickers = Array.from(new Set(investments.map(inv =>
-        `${inv.symbol}.NS` // All NSE stocks inherently expect an `.NS` natively attached!
-    )));
+    const uniqueTickers = Array.from(new Set(investments
+        .filter(inv => !filterScript || inv.symbol === filterScript)
+        .map(inv => `${inv.symbol}.NS`)
+    ));
+
+    // If we're filtering for a script with no transactions, return empty data
+    if (uniqueTickers.length === 0 && filterScript) return { chartData: [], lastMarketDate: null };
 
     // Extract the exact first day the user natively entered into their database
-    const firstDate = new Date(investments[0].date);
+    const scriptInvestments = investments.filter(inv => !filterScript || inv.symbol === filterScript);
+    const firstDate = new Date(scriptInvestments[0]?.date || investments[0].date);
     // Rewind strictly 7 days to aggressively guarantee we natively fetch the 'Last Close Price' gracefully
     firstDate.setDate(firstDate.getDate() - 7); 
 
@@ -92,7 +97,12 @@ export async function generatePortfolioTimeline(investments: Transaction[]): Pro
 
     // We must physically guarantee all manual transaction dates completely exist inside our timeline.
     // E.g. If you bought on Sunday (not a market day), the timeline MUST exist on Sunday to reflect your Buy!
+    // IMPORTANT: We use ALL transactions below to establish the full portfolio's timeline even when filtering!
     investments.forEach(inv => allDates.add(inv.date));
+
+    // Also, ensure "Today" is in the timeline so charts extend to the most recent date!
+    const todayStr = new Date().toISOString().split('T')[0];
+    allDates.add(todayStr);
 
     // ===============================================
     // 4. SORT THE TIMELINE STRICTLY CHRONOLOGICALLY
@@ -121,7 +131,7 @@ export async function generatePortfolioTimeline(investments: Transaction[]): Pro
         const runningHoldings: Record<string, { quantity: number, invested: number }> = {};
 
         // LOOP BACK IN TIME: For THIS exact chart day, find strictly every transaction that occurred ON OR BEFORE this day seamlessly.
-        investments.filter(inv => inv.date <= date).forEach(inv => {
+        investments.filter(inv => inv.date <= date && (!filterScript || inv.symbol === filterScript)).forEach(inv => {
             const ticker = `${inv.symbol}.NS`;
             if (!runningHoldings[ticker]) runningHoldings[ticker] = { quantity: 0, invested: 0 };
 
@@ -154,7 +164,7 @@ export async function generatePortfolioTimeline(investments: Transaction[]): Pro
         });
 
         // Detect if the user exactly clicked "Buy" on this exact date securely to draw the precise circular blip exactly on the Line Chart!
-        const dayPurchases = investments.filter(inv => inv.date === date && inv.type === 'Buy');
+        const dayPurchases = investments.filter(inv => inv.date === date && inv.type === 'Buy' && (!filterScript || inv.symbol === filterScript));
         const isPurchase = dayPurchases.length > 0;
         
         // Pass strictly down only exactly what explicitly naturally rendered natively explicitly strictly intuitively to the tooltips!
@@ -163,18 +173,31 @@ export async function generatePortfolioTimeline(investments: Transaction[]): Pro
             : undefined;
 
         // RETURN THIS DAY'S DATA POINT:
-        return {
+        const dataPoint: DailyPerformance = {
             date,
             investedValue,
             portfolioValue,
             isPurchase,
             purchaseDetails
         };
+
+        // If we are filtering for a specific stock, calculate the Per-Unit Price metrics!
+        if (filterScript) {
+            const ticker = `${filterScript}.NS`;
+            const h = runningHoldings[ticker];
+            if (h && h.quantity > 0) {
+                dataPoint.avgPrice = h.invested / h.quantity;
+                dataPoint.currentPrice = lastKnownPrices[ticker] || dataPoint.avgPrice;
+            }
+        }
+
+        return dataPoint;
     });
 
     // We originally parsed dates starting 7 days before your first trade gracefully...
     // Now we use `filter` explicitly entirely precisely dropping those earlier invisible days seamlessly cleanly securely returning precisely the UX gracefully! 
-    const chartData = timeline.filter(day => day.date >= investments[0].date);
+    // For single script charts, we still want to show the full portfolio window if possible, but at least from the script's first buy.
+    const chartData = timeline.filter(day => day.date >= (scriptInvestments[0]?.date || investments[0].date));
 
     return { chartData, lastMarketDate };
 }
